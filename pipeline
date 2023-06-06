@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building...'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing...'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+            }
+        }
+    }
+    environment {
+        PATH = "/usr/local/bin:$PATH"
+    }
+    options {
+        skipDefaultCheckout()
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build') {
+            when {
+                branch 'master'
+            }
+            steps {
+                sh 'make build'
+            }
+        }
+        stage('Test') {
+            when {
+                branch 'master'
+            }
+            steps {
+                sh 'make test'
+            }
+        }
+        stage('Deploy') {
+            when {
+                branch 'master'
+            }
+            steps {
+                sh 'make deploy'
+            }
+        }
+    }
+}
